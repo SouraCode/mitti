@@ -1,0 +1,60 @@
+.account-orders {
+  max-width: 900px;
+}
+.account-orders .section-heading {
+  margin-bottom: 20px;
+}
+.account-orders .section-heading h2 {
+  font-size: 30px;
+}
+.account-order-list {
+  border-top: 1px solid var(--line);
+}
+.account-order-list article {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 18px;
+  align-items: center;
+  padding: 18px 10px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+.account-order-list article div strong,
+.account-order-list article div span {
+  display: block;
+}
+.account-order-list article div span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.order-status {
+  text-transform: capitalize;
+  color: var(--wine);
+  font-weight: 600;
+}
+.account-help {
+  margin-top: 25px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.account-help a {
+  color: var(--wine);
+  font-weight: 600;
+}
+.google-button.unavailable {
+  color: var(--muted);
+  background: #f5f1ef;
+  cursor: not-allowed;
+}
+.form-foot:empty {
+  display: none;
+}
+@media (max-width: 650px) {
+  .account-order-list article {
+    grid-template-columns: 1.4fr 1fr;
+    gap: 8px;
+  }
+  .account-order-list article div {
+    grid-row: span 2;
+  }
+}
