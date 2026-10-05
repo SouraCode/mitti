@@ -27,6 +27,6 @@
     "zod": "latest"
   },
   "devDependencies": {
-    "nodemon": "latest"
+    "nodemon": "^1.14.10"
   }
 }
