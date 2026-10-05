@@ -6,6 +6,7 @@ import SectionHeading from '../components/common/SectionHeading';
 import { useProducts } from '../hooks/useProducts';
 import { productsApi } from '../services/api';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 
 function offerLabel(product) {
   if (!product.offer) return '';
@@ -34,6 +35,7 @@ function GalleryPhoto({ image, name, index }) {
 export default function ProductPage() {
   const { slug } = useParams();
   const { add } = useCart();
+  const { has, toggle } = useWishlist();
   const [state, setState] = useState({ loading: true, product: null });
   const [added, setAdded] = useState(false);
   const { products: allProducts, loading: suggestionsLoading } = useProducts({ limit: '12' });
@@ -135,6 +137,14 @@ export default function ProductPage() {
               : added
                 ? 'Added to bag ✓'
                 : 'Add to bag'}
+          </button>
+          <button
+            type="button"
+            className={`detail-wishlist-button${has(product) ? ' is-saved' : ''}`}
+            onClick={() => toggle(product)}
+            aria-pressed={has(product)}
+          >
+            {has(product) ? '♥ Saved to wishlist' : '♡ Save to wishlist'}
           </button>
         </div>
       </section>

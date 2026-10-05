@@ -1,12 +1,15 @@
 import { useSearchParams } from 'react-router-dom';
 import ProductGrid from '../components/product/ProductGrid';
 import { useProducts } from '../hooks/useProducts';
-const categories = ['All rituals', 'Hair care', 'Skin care', 'Cleansing'];
+import { useCategories } from '../hooks/useCategories';
 export default function ShopPage() {
   const [params, setParams] = useSearchParams();
   const active = params.get('category') || 'All rituals';
+  const categories = ['All rituals', ...useCategories().map((category) => category.name)];
+  const search = params.get('search') || '';
   const { products, loading } = useProducts({
     category: active === 'All rituals' ? '' : active,
+    search,
     sort: params.get('sort') || 'newest',
   });
   const setCategory = (category) => {
@@ -18,8 +21,12 @@ export default function ShopPage() {
     <section className="shop-page section">
       <div className="page-intro">
         <p className="eyebrow">The collection</p>
-        <h1>Care, in its own time.</h1>
-        <p>Our catalogue will be shaped by fresh, small-batch releases.</p>
+        <h1>{search ? `Results for “${search}”` : 'Care, in its own time.'}</h1>
+        <p>
+          {search
+            ? 'Browse products matching your search.'
+            : 'Our catalogue will be shaped by fresh, small-batch releases.'}
+        </p>
       </div>
       <div className="shop-tools">
         <div className="filter-tabs">

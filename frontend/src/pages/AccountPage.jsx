@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ordersApi } from '../services/api';
-import { formatLongDate } from '../utils/dates';
 
 export default function AccountPage() {
   const { user, loading, logout } = useAuth();
@@ -176,54 +175,18 @@ export default function AccountPage() {
               </div>
             ) : orders.length ? (
               <div className="order-cards">
-                {orders.map((order) => (
-                  <article className="order-card" key={order._id}>
-                    <div className="order-number">
-                      <span>Order</span>
-                      <strong>#{order._id.slice(-6).toUpperCase()}</strong>
-                    </div>
-                    <div>
-                      <span>Date</span>
-                      <strong>{new Date(order.createdAt).toLocaleDateString()}</strong>
-                    </div>
-                    <div>
-                      <span>Items</span>
-                      <strong>
-                        {order.items.reduce((count, item) => count + item.quantity, 0)}
-                      </strong>
-                    </div>
-                    <div>
-                      <span>Total</span>
-                      <strong>₹{Number(order.total).toFixed(2)}</strong>
-                    </div>
-                    <span className="order-state">{order.fulfillmentStatus}</span>
-                    <div className="order-meta">
-                      <span>Delivery</span>
-                      <strong className="order-delivery-date">
-                        {order.deliveredAt
-                          ? `Delivered ${formatLongDate(order.deliveredAt)}`
-                          : order.fulfillmentStatus === 'cancelled'
-                            ? 'Order cancelled'
-                            : order.estimatedDeliveryAt
-                              ? `Estimated by ${formatLongDate(order.estimatedDeliveryAt)}`
-                              : 'Estimate unavailable'}
-                      </strong>
-                      <span>Payment</span>
-                      <strong>
-                        {order.paymentState === 'cod' ? 'Cash on delivery' : order.paymentState}
-                      </strong>
-                      <span>Delivering to</span>
-                      <strong>
-                        {order.deliveryAddress?.city}, {order.deliveryAddress?.state} ·{' '}
-                        {order.deliveryAddress?.postalCode}
-                      </strong>
-                      <span>Items</span>
-                      <strong>
-                        {order.items.map((item) => `${item.name} × ${item.quantity}`).join(', ')}
-                      </strong>
-                    </div>
-                  </article>
-                ))}
+                {orders.map((order) => {
+                  return <article className="order-card" key={order._id}>
+                    <Link className="order-summary-row" to={`/account/orders/${order._id}`}>
+                      <div className="order-number"><span>Order</span><strong>#{order._id.slice(-6).toUpperCase()}</strong></div>
+                      <div><span>Date</span><strong>{new Date(order.createdAt).toLocaleDateString()}</strong></div>
+                      <div><span>Items</span><strong>{order.items.reduce((count, item) => count + item.quantity, 0)}</strong></div>
+                      <div><span>Total</span><strong>₹{Number(order.total).toFixed(2)}</strong></div>
+                      <span className="order-state">{order.fulfillmentStatus}</span>
+                      <span className="order-expand">View details →</span>
+                    </Link>
+                  </article>;
+                })}
               </div>
             ) : (
               <div className="orders-empty">

@@ -15,7 +15,6 @@ const blank = {
   lowStockThreshold: 10,
   status: 'draft',
 };
-const categories = ['Hair care', 'Skin care', 'Cleansing'];
 function ProductForm({ product, onSaved, close }) {
   const [data, setData] = useState(() =>
     product ? { ...product, ingredientsText: (product.ingredients || []).join('\n') } : { ...blank }
@@ -23,6 +22,10 @@ function ProductForm({ product, onSaved, close }) {
   const [images, setImages] = useState([]);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    adminApi.categories().then(({ categories: list }) => setCategories(list)).catch(() => setCategories([]));
+  }, []);
   const set = (key, value) => setData((current) => ({ ...current, [key]: value }));
   const submit = async (event) => {
     event.preventDefault();
@@ -96,15 +99,16 @@ function ProductForm({ product, onSaved, close }) {
               <option value="" disabled>
                 Choose a category
               </option>
-              {data.category && !categories.includes(data.category) && (
+              {data.category && !categories.some((category) => category.name === data.category) && (
                 <option value={data.category}>{data.category} (existing)</option>
               )}
               {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
+                <option key={category._id} value={category.name}>
+                  {category.name}
                 </option>
               ))}
             </select>
+            <a className="category-manage-link" href="/admin/categories">+ Create or manage categories</a>
           </label>
           <label>
             Regular price (₹)

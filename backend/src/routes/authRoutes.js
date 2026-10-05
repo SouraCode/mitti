@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import passport from '../config/passport.js';
+import { env } from '../config/env.js';
 import { authenticate, authorize } from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
 import {
@@ -21,11 +22,7 @@ import {
   authProviders,
 } from '../controllers/authController.js';
 const router = Router();
-const googleReady = Boolean(
-  process.env.GOOGLE_CLIENT_ID &&
-  process.env.GOOGLE_CLIENT_SECRET &&
-  process.env.GOOGLE_CALLBACK_URL
-);
+const googleReady = env.google.configured;
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 12,
@@ -59,7 +56,7 @@ router.get(
   googleReady
     ? passport.authenticate('google', {
         session: false,
-        failureRedirect: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/login?google=failed`,
+        failureRedirect: `${env.frontendUrl}/login?google=failed`,
       })
     : (req, res) => res.status(503).end(),
   googleCallback

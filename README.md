@@ -50,6 +50,8 @@ The admin app runs on `http://localhost:3000/admin/login`. For a production depl
 
 - `MONGODB_URI`, `JWT_SECRET`, `FRONTEND_URL`, and `ADMIN_URL`
 - Google OAuth values (`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_CALLBACK_URL`) if Google login is wanted
+
+For Google sign-in, create a **Web application** OAuth client in Google Cloud and add the exact callback URL used by the API to its Authorized redirect URIs. For local development, that is `http://localhost:5000/api/auth/google/callback`. Add your storefront URL (for example, `http://localhost:5173`) to Authorized JavaScript origins. Keep the client secret in `backend/.env` only; the client never receives it.
 - SMTP values and `EMAIL_FROM` to send verification and reset emails
 - Cloudinary values for durable product/review image storage; without them, uploaded product photos are stored under `backend/uploads` (use persistent writable storage in production). Set `API_PUBLIC_URL` if the API is behind a proxy and needs a canonical public image URL.
 - Payment provider values, or explicitly set `COD_ENABLED=true` if cash on delivery is a real business option

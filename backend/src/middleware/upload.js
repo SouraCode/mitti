@@ -14,3 +14,5 @@ export const reviewImages = (req, res, next) =>
   upload.array('images', 5)(req, res, (error) =>
     next(error ? new ApiError(400, error.message) : null)
   );
+export const categoryImage = (req, res, next) =>
+  upload.single('image')(req, res, (error) => next(error ? new ApiError(400, error.message) : null));

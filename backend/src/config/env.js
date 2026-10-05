@@ -1,4 +1,8 @@
 import 'dotenv/config';
+
+const googleClientId = process.env.GOOGLE_CLIENT_ID?.trim() || '';
+const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET?.trim() || '';
+const googleCallbackUrl = process.env.GOOGLE_CALLBACK_URL?.trim() || '';
 const required = ['MONGODB_URI', 'JWT_SECRET'];
 if (process.env.NODE_ENV === 'production')
   required.forEach((key) => {
@@ -13,6 +17,12 @@ export const env = {
   adminUrl: process.env.ADMIN_URL || 'http://localhost:3000',
   cookieSecure: process.env.COOKIE_SECURE === 'true' || process.env.NODE_ENV === 'production',
   codEnabled: process.env.COD_ENABLED === 'true',
+  google: {
+    clientId: googleClientId,
+    clientSecret: googleClientSecret,
+    callbackUrl: googleCallbackUrl,
+    configured: Boolean(googleClientId && googleClientSecret && googleCallbackUrl),
+  },
   deliveryEstimateBusinessDays: Math.min(
     30,
     Math.max(1, Number.parseInt(process.env.DELIVERY_ESTIMATE_BUSINESS_DAYS || '5', 10) || 5)

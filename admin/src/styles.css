@@ -359,6 +359,11 @@ td small {
   color: #9a3333 !important;
   font-size: 12px !important;
 }
+.category-form { display: flex; max-width: 560px; align-items: end; gap: 10px; margin-bottom: 18px; }.category-form label { display: grid; flex: 1; gap: 5px; font-size: 12px; font-weight: 600; }.category-form input { width: 100%; border: 1px solid var(--line); padding: 10px; background: #fff; }.category-form button { min-height: 40px; }.category-list { display: flex; flex-wrap: wrap; gap: 9px; }.category-list span { padding: 8px 11px; border-radius: 99px; background: #edf2e8; color: #476238; font-size: 12px; }
+.offer-form .modal-title p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }.offer-enabled { display: flex; align-items: center; gap: 8px; }.offer-enabled input { width: auto !important; margin: 0 !important; }
+.category-manage-link { display: inline-block; margin-top: 7px; color: var(--rose); font-size: 11px; font-weight: 600; }
+.category-create-form { max-width: 760px; align-items: end; }.category-create-form > label { min-width: 220px; }.category-create-form input[type='file'] { padding: 7px 0; font-size: 11px; }.category-help { margin: -6px 0 18px; color: var(--muted); font-size: 12px; }.category-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }.category-admin-card { overflow: hidden; border: 1px solid var(--line); background: #fff; }.category-admin-image { display: grid; aspect-ratio: 1.5; place-items: center; background: #f4eeea; color: var(--muted); font-size: 11px; }.category-admin-image img { width: 100%; height: 100%; object-fit: cover; }.category-admin-card > div:last-child { display: grid; gap: 3px; padding: 12px; }.category-admin-card small { color: var(--muted); font-size: 11px; }
+.category-image-replace { display: grid; gap: 4px; margin-top: 8px; color: var(--rose); font-size: 11px; font-weight: 600; }.category-image-replace input { width: 100%; font-size: 10px; }.category-remove { width: fit-content; margin-top: 5px; border: 0; background: transparent; color: #a44343; font-size: 11px; padding: 0; text-decoration: underline; }
 .login-page {
   min-height: 100vh;
   background: linear-gradient(120deg, #f4e5e1, #fdfaf8);

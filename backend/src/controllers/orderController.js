@@ -1,6 +1,7 @@
 import Product from '../models/Product.js';
 import Offer from '../models/Offer.js';
 import Order from '../models/Order.js';
+import mongoose from 'mongoose';
 import ApiError from '../utils/ApiError.js';
 import { effectivePrice } from '../utils/pricing.js';
 import { env } from '../config/env.js';
@@ -88,4 +89,12 @@ export async function createOrder(req, res) {
 }
 export async function myOrders(req, res) {
   res.json({ orders: await Order.find({ customer: req.user._id }).sort({ createdAt: -1 }) });
+}
+
+export async function myOrder(req, res) {
+  const { orderId } = req.params;
+  if (!mongoose.isValidObjectId(orderId)) throw new ApiError(404, 'Order not found.');
+  const order = await Order.findOne({ _id: orderId, customer: req.user._id });
+  if (!order) throw new ApiError(404, 'Order not found.');
+  res.json({ order });
 }

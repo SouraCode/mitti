@@ -967,3 +967,84 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Routine storefront — product-led homepage */
+.ritual-home {
+  --ritual-ink: #25301e;
+  --ritual-olive: #4f6739;
+  --ritual-sand: #f7f0e7;
+  --ritual-card: #fffdf9;
+  --ritual-line: #e9dfd0;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 26px clamp(20px, 4vw, 52px) 50px;
+  background: var(--ritual-sand);
+}
+.ritual-home .ritual-icon { display: block; flex: none; }
+.ritual-intro { display: flex; gap: 13px; max-width: 740px; margin: 0 auto 21px; }
+.ritual-search { display: flex; min-width: 0; flex: 1; align-items: center; gap: 12px; padding: 0 17px; border: 1px solid #eee3d5; border-radius: 14px; background: #fffdfa; color: #1e251b; box-shadow: 0 6px 18px rgba(92, 72, 48, 0.05); }
+.ritual-search input { width: 100%; height: 48px; border: 0; outline: 0; background: transparent; color: #354033; font-size: 14px; }
+.ritual-search input::placeholder { color: #958f87; }
+.ritual-filter { display: grid; width: 49px; height: 49px; flex: 0 0 49px; place-items: center; border-radius: 14px; background: #fffdfa; color: var(--ritual-ink); box-shadow: 0 6px 18px rgba(92, 72, 48, 0.05); transition: transform .2s ease, background .2s ease; }
+.ritual-filter:hover { background: #edf0e5; transform: translateY(-2px); }
+.ritual-hero { position: relative; display: grid; min-height: 375px; grid-template-columns: 45% 55%; overflow: hidden; border-radius: 26px; background: #cdbb9f; isolation: isolate; }
+.ritual-hero-copy { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: 45px clamp(28px, 5vw, 70px); background: linear-gradient(105deg, #d8c8ad 0%, #e8dac5 80%, rgba(232, 218, 197, .05) 100%); color: var(--ritual-ink); }
+.ritual-overline { margin: 0 0 11px; color: #697255; font-size: 9px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; }
+.ritual-hero h1 { margin: 0; font-size: clamp(42px, 4.9vw, 68px); letter-spacing: -.065em; line-height: .91; }
+.ritual-hero-copy > p:not(.ritual-overline) { margin: 19px 0 20px; color: #414a39; font-size: 14px; line-height: 1.45; }
+.ritual-hero-button, .ritual-quiz a { display: inline-flex; align-items: center; gap: 9px; padding: 11px 15px; border-radius: 999px; background: var(--ritual-olive); color: #fff; font-size: 11px; font-weight: 600; transition: transform .2s ease, background .2s ease; }
+.ritual-hero-button:hover, .ritual-quiz a:hover { background: #3d542c; transform: translateY(-2px); }
+.ritual-hero-image { min-height: 375px; background: linear-gradient(90deg, rgba(53, 61, 39, .1), transparent 35%), url('https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=1300&q=90') 58% 43%/cover; }
+.ritual-product-bottle { position: absolute; z-index: 3; bottom: 16px; left: 43.5%; display: flex; width: 76px; height: 162px; flex-direction: column; align-items: center; padding-top: 31px; border: 4px solid rgba(190, 159, 95, .8); border-radius: 9px 9px 16px 16px; background: linear-gradient(100deg, rgba(127, 114, 70, .86), #e3d2a2 49%, #988252); box-shadow: 12px 10px 20px rgba(57, 43, 24, .25); color: #fff9e9; transform: rotate(-4deg); }
+.ritual-product-bottle::before { position: absolute; top: -27px; width: 29px; height: 29px; border-radius: 4px 4px 0 0; background: linear-gradient(90deg, #a7894e, #dec283, #90723b); content: ''; }
+.ritual-product-bottle span { font-family: 'Playfair Display', serif; font-size: 10px; letter-spacing: .12em; }
+.ritual-product-bottle small { margin-top: 12px; font-family: 'Playfair Display', serif; font-size: 8px; line-height: 1.25; text-align: center; }
+.ritual-product-bottle i { position: absolute; bottom: 12px; font-size: 5px; font-style: normal; }
+.ritual-benefits { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; padding: 36px 12px 42px; }
+.ritual-benefit { display: flex; min-width: 0; flex-direction: column; align-items: center; color: #1c2519; text-align: center; }
+.ritual-benefit > span { display: grid; width: 69px; height: 69px; margin-bottom: 8px; place-items: center; border: 1px solid #e9ddca; border-radius: 50%; background: #f3ead8; transition: transform .2s ease, background .2s ease; }
+.ritual-benefit:hover > span { background: #e8efd9; transform: translateY(-3px); }
+.ritual-benefit strong { font-size: 13px; font-weight: 600; }
+.ritual-benefit small { display: none; margin-top: 3px; color: #777a70; font-size: 10px; }
+.ritual-products { padding: 0 0 42px; }
+.ritual-section-heading { display: flex; align-items: end; justify-content: space-between; margin-bottom: 18px; }
+.ritual-section-heading .ritual-overline { margin-bottom: 5px; }
+.ritual-section-heading h2 { margin: 0; color: #1e271a; font-size: clamp(30px, 3vw, 42px); letter-spacing: -.055em; }
+.ritual-section-heading > a { display: inline-flex; align-items: center; gap: 8px; padding-bottom: 5px; color: #1e271a; font-size: 12px; font-weight: 600; }
+.ritual-product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.ritual-product-card { min-width: 0; overflow: hidden; border: 1px solid var(--ritual-line); border-radius: 17px; background: var(--ritual-card); box-shadow: 0 8px 22px rgba(67, 48, 25, .05); transition: transform .25s ease, box-shadow .25s ease; }
+.ritual-product-card:hover { box-shadow: 0 14px 28px rgba(67, 48, 25, .12); transform: translateY(-4px); }
+.ritual-product-image { position: relative; display: block; aspect-ratio: 1.12; overflow: hidden; background: #eadfce; }
+.ritual-product-image img { width: 100%; height: 100%; object-fit: cover; transition: transform .45s ease; }
+.ritual-product-image.is-empty { display: grid; place-items: center; background: linear-gradient(135deg, #f6efe4, #e9dcc8); color: #807767; }
+.ritual-product-image.is-empty em { font-size: 11px; font-style: normal; line-height: 1.5; text-align: center; }
+.ritual-product-card:hover img { transform: scale(1.045); }
+.ritual-product-image span { position: absolute; z-index: 1; top: 11px; left: 11px; padding: 4px 8px; border-radius: 20px; background: #5e793f; color: #fff; font-size: 9px; font-weight: 600; }
+.ritual-product-info { padding: 14px 14px 13px; }
+.ritual-product-info h3 { margin: 0; overflow: hidden; color: #20271c; font: 600 17px 'DM Sans', sans-serif; letter-spacing: -.03em; text-overflow: ellipsis; white-space: nowrap; }
+.ritual-product-info p { margin: 3px 0; overflow: hidden; color: #77786e; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.ritual-product-info small { display: block; color: #b77a15; font-size: 10px; }.ritual-product-info small i { color: #73746c; font-style: normal; }
+.ritual-product-info > div { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }.ritual-product-info strong { color: #182115; font-size: 17px; }.ritual-product-info button { display: grid; width: 32px; height: 32px; place-items: center; border: 0; border-radius: 50%; background: #4f6739; color: #fff; font-size: 22px; line-height: 1; transition: transform .2s ease, background .2s ease; }.ritual-product-info button:hover { background: #314723; transform: rotate(90deg); }
+.ritual-no-products { grid-column: 1 / -1; margin: 0; padding: 28px; border: 1px dashed var(--ritual-line); border-radius: 14px; color: #77776e; font-size: 13px; text-align: center; }
+.ritual-quiz { position: relative; min-height: 230px; overflow: hidden; border-radius: 22px; background: linear-gradient(90deg, rgba(49, 63, 34, .8) 0%, rgba(54, 68, 39, .5) 45%, rgba(54, 68, 39, .05) 72%), url('https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&w=1400&q=85') center/cover; color: #fff; }
+.ritual-quiz > div { position: relative; z-index: 1; padding: 40px clamp(26px, 5vw, 68px); }.ritual-quiz .ritual-overline { color: #e2e7cd; }.ritual-quiz h2 { margin: 0; font-size: clamp(30px, 3.5vw, 44px); letter-spacing: -.05em; }.ritual-quiz p:not(.ritual-overline) { margin: 5px 0 16px; font-size: 14px; }.ritual-quiz a { background: #6f8951; }
+.ritual-bottom-nav { display: none; }
+
+@media (max-width: 760px) {
+  .announcement { display: none; }
+  .site-header { position: sticky; border-bottom: 0; background: var(--ritual-sand); }
+  .site-header .header-inner { height: 67px; grid-template-columns: 42px 1fr auto; padding: 0 18px; }
+  .site-header .brand { color: #252a21; font-size: 21px; letter-spacing: .19em; }
+  .site-header .brand small { display: block; margin-top: 6px; color: #777b68; font-size: 6px; letter-spacing: .24em; }
+  .site-header .action-label, .site-header .search-link, .site-header .account-link { display: none; }
+  .site-header .header-actions { gap: 0; }.site-header .header-bag { width: 42px; color: #21291c; }.site-header .header-bag b { top: 5px; right: 0; border-color: var(--ritual-sand); background: #58713c; }
+  .ritual-home { padding: 0 14px 92px; }.ritual-intro { margin-bottom: 16px; }.ritual-search input { height: 45px; font-size: 12px; }.ritual-filter { width: 45px; height: 45px; flex-basis: 45px; }
+  .ritual-hero { min-height: 272px; grid-template-columns: 56% 44%; border-radius: 20px; }.ritual-hero-copy { padding: 25px 15px 23px 21px; }.ritual-hero h1 { font-size: clamp(31px, 9.5vw, 40px); }.ritual-hero-copy > p:not(.ritual-overline) { margin: 11px 0 14px; font-size: 11px; }.ritual-overline { margin-bottom: 7px; font-size: 7px; }.ritual-hero-button { gap: 5px; padding: 8px 10px; font-size: 9px; }.ritual-hero-image { min-height: 272px; background-position: 57% center; }.ritual-product-bottle { bottom: 10px; left: 49%; width: 49px; height: 105px; padding-top: 21px; border-width: 3px; border-radius: 6px 6px 11px 11px; }.ritual-product-bottle::before { top: -19px; width: 19px; height: 20px; }.ritual-product-bottle span { font-size: 7px; }.ritual-product-bottle small { margin-top: 6px; font-size: 5px; }.ritual-product-bottle i { bottom: 7px; font-size: 3px; }
+  .ritual-benefits { gap: 2px; padding: 27px 0 29px; }.ritual-benefit > span { width: 52px; height: 52px; margin-bottom: 6px; }.ritual-benefit > span svg { width: 21px; height: 21px; }.ritual-benefit strong { font-size: 10px; }.ritual-products { padding-bottom: 28px; }.ritual-section-heading { margin-bottom: 13px; }.ritual-section-heading h2 { font-size: 25px; }.ritual-section-heading > a { padding-bottom: 2px; font-size: 11px; }.ritual-section-heading > a svg { width: 15px; }
+  .ritual-product-grid { gap: 9px; }.ritual-product-card { border-radius: 12px; }.ritual-product-image span { top: 7px; left: 7px; padding: 3px 6px; font-size: 7px; }.ritual-product-info { padding: 9px 9px 10px; }.ritual-product-info h3 { font-size: 11px; }.ritual-product-info p { margin: 1px 0 3px; font-size: 8px; }.ritual-product-info small { font-size: 8px; }.ritual-product-info > div { margin-top: 5px; }.ritual-product-info strong { font-size: 14px; }.ritual-product-info button { width: 27px; height: 27px; font-size: 18px; }
+  .ritual-quiz { min-height: 155px; border-radius: 17px; background-position: 56% center; }.ritual-quiz > div { padding: 23px 20px; }.ritual-quiz h2 { font-size: 22px; }.ritual-quiz p:not(.ritual-overline) { margin: 2px 0 9px; font-size: 10px; }.ritual-quiz a { padding: 7px 10px; font-size: 9px; }
+  .ritual-bottom-nav { position: fixed; z-index: 20; right: 0; bottom: 0; left: 0; display: grid; grid-template-columns: repeat(5, 1fr); padding: 9px 8px max(9px, env(safe-area-inset-bottom)); border-top: 1px solid #eae1d3; background: rgba(255, 252, 247, .97); box-shadow: 0 -6px 22px rgba(52, 43, 30, .06); backdrop-filter: blur(10px); }.ritual-bottom-nav a { display: flex; min-height: 44px; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: #77776e; font-size: 9px; }.ritual-bottom-nav a.active { color: #4f6739; }.ritual-bottom-nav svg { stroke-width: 1.5; }
+  .footer { padding-bottom: 76px; }
+}
+
+@media (max-width: 370px) { .ritual-hero h1 { font-size: 29px; }.ritual-product-grid { gap: 7px; }.ritual-product-info { padding: 8px; }.ritual-benefit strong { font-size: 9px; } }

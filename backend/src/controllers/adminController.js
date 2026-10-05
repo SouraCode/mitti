@@ -5,6 +5,7 @@ import Review from '../models/Review.js';
 import Order from '../models/Order.js';
 import ApiError from '../utils/ApiError.js';
 import { slugify } from '../utils/slugify.js';
+export { listCategories, createCategory, uploadCategoryImage, removeCategory } from './categoryController.js';
 export async function dashboard(req, res) {
   const [products, drafts, lowStock, orders, pendingReviews] = await Promise.all([
     Product.countDocuments(),

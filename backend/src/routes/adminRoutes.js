@@ -6,10 +6,11 @@ import {
   productSchema,
   offerSchema,
   inventorySchema,
+  categorySchema,
 } from '../validation/schemas.js';
 import { adminLogin, logout, session } from '../controllers/authController.js';
 import * as admin from '../controllers/adminController.js';
-import { productImages } from '../middleware/upload.js';
+import { categoryImage, productImages } from '../middleware/upload.js';
 import {
   addProductImages,
   removeProductImage,
@@ -23,6 +24,10 @@ router.get('/session', authenticate, authorize('admin'), session);
 router.use(authenticate, authorize('admin'));
 router.get('/dashboard', admin.dashboard);
 router.get('/products', admin.listProducts);
+router.get('/categories', admin.listCategories);
+router.post('/categories', validate(categorySchema), admin.createCategory);
+router.post('/categories/:id/image', categoryImage, admin.uploadCategoryImage);
+router.delete('/categories/:id', admin.removeCategory);
 router.post('/products', validate(productSchema), admin.createProduct);
 router.patch('/products/:id', validate(productSchema), admin.updateProduct);
 router.patch('/products/:id/inventory', validate(inventorySchema), admin.adjustInventory);
@@ -33,7 +38,7 @@ router.patch('/products/:id/images/:imageId/primary', setPrimaryImage);
 router.delete('/products/:id/images/:imageId', removeProductImage);
 router.get('/offers', admin.listOffers);
 router.post('/offers', validate(offerSchema), admin.createOffer);
-router.patch('/offers/:id', admin.updateOffer);
+router.patch('/offers/:id', validate(offerSchema), admin.updateOffer);
 router.get('/reviews', admin.listReviews);
 router.patch('/reviews/:id', admin.moderateReview);
 router.get('/orders', admin.listOrders);

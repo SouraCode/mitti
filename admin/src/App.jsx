@@ -8,6 +8,7 @@ import InventoryPage from './pages/InventoryPage';
 import OffersPage from './pages/OffersPage';
 import OrdersPage from './pages/OrdersPage';
 import ReviewsPage from './pages/ReviewsPage';
+import CategoriesPage from './pages/CategoriesPage';
 function Protected({ children }) {
   const { user, loading } = useAuth();
   if (loading) return <div className="screen-loader">Checking secure session…</div>;
@@ -27,6 +28,7 @@ export default function App() {
       >
         <Route index element={<DashboardPage />} />
         <Route path="products" element={<ProductsPage />} />
+        <Route path="categories" element={<CategoriesPage />} />
         <Route path="inventory" element={<InventoryPage />} />
         <Route path="offers" element={<OffersPage />} />
         <Route path="orders" element={<OrdersPage />} />

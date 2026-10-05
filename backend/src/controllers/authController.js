@@ -123,11 +123,7 @@ export async function googleCallback(req, res) {
 export function authProviders(req, res) {
   res.json({
     emailPassword: true,
-    google: Boolean(
-      process.env.GOOGLE_CLIENT_ID &&
-      process.env.GOOGLE_CLIENT_SECRET &&
-      process.env.GOOGLE_CALLBACK_URL
-    ),
+    google: env.google.configured,
     emailDelivery: emailDeliveryConfigured,
   });
 }

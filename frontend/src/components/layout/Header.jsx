@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
+import { useWishlist } from '../../context/WishlistContext';
 
 const links = [
   ['/', 'Home'],
@@ -13,18 +14,13 @@ const links = [
 
 function Icon({ name }) {
   const paths = {
-    search: (
-      <>
-        <circle cx="11" cy="11" r="6.5" />
-        <path d="m16 16 4.5 4.5" />
-      </>
-    ),
     user: (
       <>
         <circle cx="12" cy="8" r="3.5" />
         <path d="M4.5 20a7.5 7.5 0 0 1 15 0" />
       </>
     ),
+    heart: <path d="M20.8 8.8c0 5-8.8 10.7-8.8 10.7S3.2 13.8 3.2 8.8A4.7 4.7 0 0 1 12 6.6a4.7 4.7 0 0 1 8.8 2.2Z" />,
     bag: (
       <>
         <path d="M5 8h14l1 12H4L5 8Z" />
@@ -50,6 +46,7 @@ function Icon({ name }) {
 export default function Header() {
   const [open, setOpen] = useState(false);
   const { count } = useCart();
+  const { count: wishlistCount } = useWishlist();
   const { user, loading } = useAuth();
   const closeMenu = () => setOpen(false);
 
@@ -89,12 +86,13 @@ export default function Header() {
         </nav>
         <div className="header-actions">
           <Link
-            className="header-icon-link search-link"
-            aria-label="Search products"
-            to="/shop"
+            className="header-icon-link wishlist-link"
+            aria-label={`Your wishlist, ${wishlistCount} products`}
+            to="/wishlist"
             onClick={closeMenu}
           >
-            <Icon name="search" />
+            <Icon name="heart" />
+            <span className="action-label">Wishlist</span>
           </Link>
           <Link
             className="header-icon-link account-link"

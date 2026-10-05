@@ -5,6 +5,7 @@ import RouteErrorBoundary from './RouteErrorBoundary';
 const links = [
   ['/admin', 'Overview'],
   ['/admin/products', 'Products'],
+  ['/admin/categories', 'Categories'],
   ['/admin/inventory', 'Inventory'],
   ['/admin/offers', 'Offers'],
   ['/admin/orders', 'Orders'],
@@ -13,6 +14,7 @@ const links = [
 const titles = {
   '/admin': 'Overview',
   '/admin/products': 'Products',
+  '/admin/categories': 'Categories',
   '/admin/inventory': 'Inventory',
   '/admin/offers': 'Offers',
   '/admin/orders': 'Orders',

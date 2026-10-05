@@ -28,6 +28,10 @@ export const adminApi = {
   session: () => api('/admin/session'),
   dashboard: () => api('/admin/dashboard'),
   products: (query = '') => api(`/admin/products${query}`),
+  categories: () => api('/admin/categories'),
+  createCategory: (name) => api('/admin/categories', { method: 'POST', body: JSON.stringify({ name }) }),
+  uploadCategoryImage: (id, form) => api(`/admin/categories/${id}/image`, { method: 'POST', body: form }),
+  removeCategory: (id) => api(`/admin/categories/${id}`, { method: 'DELETE' }),
   createProduct: (body) => api('/admin/products', { method: 'POST', body: JSON.stringify(body) }),
   updateProduct: (id, body) =>
     api(`/admin/products/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),

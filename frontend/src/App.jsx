@@ -9,12 +9,14 @@ import FaqPage from './pages/FaqPage';
 import ContactPage from './pages/ContactPage';
 import AuthPage from './pages/AuthPage';
 import AccountPage from './pages/AccountPage';
+import OrderDetailsPage from './pages/OrderDetailsPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import PolicyPage from './pages/PolicyPage';
 import NotFoundPage from './pages/NotFoundPage';
 import VerifyEmailPage from './pages/VerifyEmailPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import WishlistPage from './pages/WishlistPage';
 import ScrollManager from './components/common/ScrollManager';
 
 export default function App() {
@@ -35,8 +37,10 @@ export default function App() {
           <Route path="/forgot-password" element={<AuthPage mode="forgot" />} />
           <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/account/orders/:orderId" element={<OrderDetailsPage />} />
           <Route path="/account/*" element={<AccountPage />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/policies/:policy" element={<PolicyPage />} />
           <Route path="*" element={<NotFoundPage />} />

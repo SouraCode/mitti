@@ -50,6 +50,7 @@ export const offerSchema = obj(
 export const inventorySchema = obj(
   z.object({ quantity: z.coerce.number().int().min(0), reason: z.string().trim().min(2).max(300) })
 );
+export const categorySchema = obj(z.object({ name: z.string().trim().min(2).max(80) }));
 export const reviewSchema = obj(
   z.object({
     rating: z.coerce.number().int().min(1).max(5),
