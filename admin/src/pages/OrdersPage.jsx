@@ -36,6 +36,7 @@ export default function OrdersPage() {
                 <th>Order</th>
                 <th>Customer</th>
                 <th>Total</th>
+                <th>Method</th>
                 <th>Payment</th>
                 <th>Fulfillment</th>
               </tr>
@@ -49,6 +50,7 @@ export default function OrdersPage() {
                     <small>{o.customer?.email}</small>
                   </td>
                   <td>₹{o.total}</td>
+                  <td>{o.paymentMethod === 'razorpay' ? 'Razorpay' : 'COD'}</td>
                   <td>
                     <Status>{o.paymentState}</Status>
                   </td>

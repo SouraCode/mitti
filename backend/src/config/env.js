@@ -15,8 +15,15 @@ export const env = {
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',
   adminUrl: process.env.ADMIN_URL || 'http://localhost:3000',
+  corsOrigins: (process.env.CORS_ORIGINS || '').split(',').map((origin) => origin.trim()).filter(Boolean),
   cookieSecure: process.env.COOKIE_SECURE === 'true' || process.env.NODE_ENV === 'production',
   codEnabled: process.env.COD_ENABLED === 'true',
+  razorpay: {
+    enabled: process.env.RAZORPAY_ENABLED === 'true',
+    keyId: process.env.RAZORPAY_KEY_ID?.trim() || '',
+    keySecret: process.env.RAZORPAY_KEY_SECRET?.trim() || '',
+    webhookSecret: process.env.RAZORPAY_WEBHOOK_SECRET?.trim() || '',
+  },
   google: {
     clientId: googleClientId,
     clientSecret: googleClientSecret,

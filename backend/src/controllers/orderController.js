@@ -20,9 +20,14 @@ function estimateDeliveryDate(from = new Date()) {
 }
 
 export function paymentOptions(req, res) {
+  const onlineEnabled = Boolean(env.razorpay.enabled && env.razorpay.keyId);
   res.json({
-    methods: [{ id: 'cod', label: 'Cash on delivery', enabled: env.codEnabled }],
-    onlinePayments: false,
+    methods: [
+      { id: 'cod', label: 'Cash on delivery', enabled: env.codEnabled },
+      { id: 'razorpay', label: 'Online payment', enabled: onlineEnabled },
+    ],
+    onlinePayments: onlineEnabled,
+    razorpay: { keyId: env.razorpay.keyId || null },
   });
 }
 export async function createOrder(req, res) {
@@ -74,7 +79,8 @@ export async function createOrder(req, res) {
       ),
       subtotal: total,
       total,
-      paymentState: 'cod',
+      paymentMethod: 'cod',
+      paymentState: 'pending',
       estimatedDeliveryAt: estimateDeliveryDate(),
     });
     res.status(201).json({ order });

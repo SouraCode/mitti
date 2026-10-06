@@ -124,7 +124,17 @@ export default function OrderDetailsPage() {
 
       <section className="order-detail-info">
         <article><span>Delivery address</span><strong>{address[0] || 'Address unavailable'}</strong>{address.slice(1).map((line) => <p key={line}>{line}</p>)}</article>
-        <article><span>Payment method</span><strong>{order.paymentState === 'cod' ? 'Cash on delivery' : order.paymentState}</strong><p>{order.paymentState === 'paid' ? 'Payment received' : 'Payment status will update with your order.'}</p></article>
+        <article>
+          <span>Payment method</span>
+          <strong>{order.paymentMethod === 'razorpay' ? 'Razorpay online payment' : 'Cash on delivery'}</strong>
+          <p>
+            {order.paymentState === 'paid'
+              ? 'Payment received.'
+              : order.paymentState === 'failed'
+                ? 'Payment failed. Please retry.'
+                : 'Payment status will update with your order.'}
+          </p>
+        </article>
         <article><span>Order total</span><strong>₹{Number(order.total).toFixed(2)}</strong><p>{itemCount} {itemCount === 1 ? 'item' : 'items'} in this order</p></article>
       </section>
     </section>
