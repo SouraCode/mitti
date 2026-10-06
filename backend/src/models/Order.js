@@ -29,12 +29,27 @@ const schema = new mongoose.Schema(
     total: Number,
     estimatedDeliveryAt: Date,
     deliveredAt: Date,
-    paymentState: { type: String, enum: ['pending', 'paid', 'failed', 'cod'], default: 'pending' },
+    paymentMethod: {
+      type: String,
+      enum: ['cod', 'razorpay'],
+      default: 'cod',
+      index: true,
+    },
+    paymentState: {
+      type: String,
+      enum: ['pending', 'paid', 'failed', 'refunded', 'cod'],
+      default: 'pending',
+      index: true,
+    },
     fulfillmentStatus: {
       type: String,
       enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
       default: 'pending',
     },
+    razorpayOrderId: { type: String, index: true, sparse: true, unique: true },
+    razorpayPaymentId: { type: String, sparse: true },
+    razorpaySignature: { type: String, sparse: true },
+    paidAt: Date,
   },
   { timestamps: true }
 );

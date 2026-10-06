@@ -2,7 +2,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, extname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { randomUUID } from 'node:crypto';
-import cloudinary from '../config/cloudinary.js';
+import { cloudinary } from '../config/cloudinary.js';
 
 const backendRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const uploadRoot = resolve(backendRoot, 'uploads');

@@ -10,6 +10,7 @@ import passport from './config/passport.js';
 import { env } from './config/env.js';
 import authRoutes from './routes/authRoutes.js';
 import productRoutes from './routes/productRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
@@ -24,7 +25,33 @@ const localOrigins =
         'http://localhost:5173',
         'http://127.0.0.1:5173',
       ];
-const allowedOrigins = new Set([env.frontendUrl, env.adminUrl, ...localOrigins]);
+function normalizeOrigin(origin) {
+  try {
+    return new URL(origin.trim()).origin;
+  } catch {
+    return null;
+  }
+}
+
+const allowedOrigins = new Set(
+  [env.frontendUrl, env.adminUrl, ...env.corsOrigins, ...localOrigins]
+    .map(normalizeOrigin)
+    .filter(Boolean)
+);
+
+function isDevelopmentLoopbackOrigin(origin) {
+  if (process.env.NODE_ENV === 'production') return false;
+  try {
+    const { protocol, hostname } = new URL(origin);
+    return (
+      (protocol === 'http:' || protocol === 'https:') &&
+      ['localhost', '127.0.0.1', '[::1]'].includes(hostname)
+    );
+  } catch {
+    return false;
+  }
+}
+
 const backendRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const app = express();
 
@@ -34,7 +61,8 @@ app.use(helmet());
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins.has(origin)) return callback(null, true);
+      if (!origin || allowedOrigins.has(normalizeOrigin(origin)) || isDevelopmentLoopbackOrigin(origin))
+        return callback(null, true);
       return callback(new Error('Origin is not allowed by CORS.'));
     },
     credentials: true,
@@ -53,6 +81,7 @@ app.use('/api', (req, res, next) => {
   res.set('Cache-Control', 'no-store');
   next();
 });
+app.use('/api/payments/razorpay/webhook', express.raw({ type: 'application/json' }));
 app.use(express.json({ limit: '1mb' }));
 app.use(cookieParser());
 app.use(passport.initialize());
@@ -65,6 +94,7 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/payments', paymentRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
 app.use(notFound);

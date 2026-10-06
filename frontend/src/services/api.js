@@ -49,3 +49,10 @@ export const ordersApi = {
   paymentOptions: () => request('/orders/payment-options'),
   create: (body) => request('/orders', { method: 'POST', body: JSON.stringify(body) }),
 };
+export const paymentsApi = {
+  options: () => request('/payments/options'),
+  createOrder: (body) =>
+    request('/payments/razorpay/create-order', { method: 'POST', body: JSON.stringify(body) }),
+  verify: (body) =>
+    request('/payments/razorpay/verify', { method: 'POST', body: JSON.stringify(body) }),
+};

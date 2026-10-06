@@ -57,3 +57,32 @@ export const reviewSchema = obj(
     body: z.string().trim().max(1500).optional().default(''),
   })
 );
+export const razorpayCreateOrderSchema = obj(
+  z.object({
+    items: z
+      .array(
+        z.object({
+          productId: z.string().length(24),
+          quantity: z.coerce.number().int().min(1),
+        })
+      )
+      .min(1),
+    deliveryAddress: z.object({
+      name: z.string().trim().min(1).max(120),
+      phone: z.string().trim().min(7).max(30),
+      line1: z.string().trim().min(1).max(200),
+      line2: z.string().trim().max(200).optional().default(''),
+      city: z.string().trim().min(1).max(120),
+      state: z.string().trim().min(1).max(120),
+      postalCode: z.string().trim().min(1).max(40),
+      country: z.string().trim().min(1).max(120),
+    }),
+  })
+);
+export const razorpayVerifySchema = obj(
+  z.object({
+    razorpay_payment_id: z.string().trim().min(1),
+    razorpay_order_id: z.string().trim().min(1),
+    razorpay_signature: z.string().trim().min(1),
+  })
+);

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import { ordersApi } from '../services/api';
+import { ordersApi, paymentsApi } from '../services/api';
 import { formatLongDate } from '../utils/dates';
 
 const initialAddress = {
@@ -22,7 +22,10 @@ export default function CheckoutPage() {
   const { items, subtotal, clear } = useCart();
   const [step, setStep] = useState(0);
   const [address, setAddress] = useState(() => ({ ...initialAddress, name: user?.name || '' }));
-  const [paymentEnabled, setPaymentEnabled] = useState(false);
+  const [codEnabled, setCodEnabled] = useState(false);
+  const [onlinePayments, setOnlinePayments] = useState(false);
+  const [razorpayKeyId, setRazorpayKeyId] = useState('');
+  const [selectedMethod, setSelectedMethod] = useState('cod');
   const [loadingPayment, setLoadingPayment] = useState(true);
   const [placing, setPlacing] = useState(false);
   const [error, setError] = useState('');
@@ -34,10 +37,20 @@ export default function CheckoutPage() {
     setAddress((current) => ({ ...current, name: current.name || user.name }));
     ordersApi
       .paymentOptions()
-      .then(({ methods = [] }) =>
-        setPaymentEnabled(methods.some((method) => method.id === 'cod' && method.enabled))
-      )
-      .catch(() => setPaymentEnabled(false))
+      .then(({ methods = [], onlinePayments: online = false, razorpay = {} }) => {
+        const codAvailable = methods.some((method) => method.id === 'cod' && method.enabled);
+        const razorpayAvailable = methods.some((method) => method.id === 'razorpay' && method.enabled);
+        setCodEnabled(codAvailable);
+        setOnlinePayments(online && Boolean(razorpay.keyId));
+        setRazorpayKeyId(razorpay.keyId || '');
+        setSelectedMethod(razorpayAvailable ? 'razorpay' : 'cod');
+      })
+      .catch(() => {
+        setCodEnabled(false);
+        setOnlinePayments(false);
+        setRazorpayKeyId('');
+        setSelectedMethod('cod');
+      })
       .finally(() => setLoadingPayment(false));
   }, [user]);
 
@@ -69,6 +82,7 @@ export default function CheckoutPage() {
     setStep(1);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
   const placeOrder = async () => {
     setPlacing(true);
     setError('');
@@ -88,6 +102,86 @@ export default function CheckoutPage() {
       setPlacing(false);
     }
   };
+
+  const loadRazorpayScript = () =>
+    new Promise((resolve, reject) => {
+      if (window.Razorpay) return resolve(window.Razorpay);
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.async = true;
+      script.onload = () => {
+        if (window.Razorpay) resolve(window.Razorpay);
+        else reject(new Error('Razorpay is unavailable right now.'));
+      };
+      script.onerror = () => reject(new Error('Unable to load the Razorpay payment popup.'));
+      document.body.appendChild(script);
+    });
+
+  const placeOrderWithRazorpay = async () => {
+    setPlacing(true);
+    setError('');
+    try {
+      const paymentPayload = await paymentsApi.createOrder({
+        items: items.map((item) => ({ productId: item.id, quantity: item.quantity })),
+        deliveryAddress: address,
+      });
+
+      const razorpayLibrary = await loadRazorpayScript();
+      const options = {
+        key: paymentPayload.keyId || razorpayKeyId,
+        amount: paymentPayload.amount,
+        currency: paymentPayload.currency,
+        order_id: paymentPayload.razorpayOrderId,
+        name: 'Mitti Rituals',
+        description: 'Order payment',
+        handler: async function handlePayment(response) {
+          try {
+            const verified = await paymentsApi.verify({
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+            });
+            setOrder(verified.order);
+            clear();
+            setStep(2);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          } catch (err) {
+            setError(err.message || 'Payment verification failed. Please contact support.');
+          } finally {
+            setPlacing(false);
+          }
+        },
+        prefill: {
+          name: address.name,
+          email: user.email,
+          contact: address.phone,
+        },
+        theme: { color: '#6b4f3d' },
+        modal: {
+          ondismiss: () => {
+            setError('Payment was cancelled. Your cart is still intact and you can retry.');
+            setPlacing(false);
+          },
+        },
+      };
+
+      const razorpayCheckout = new razorpayLibrary(options);
+      razorpayCheckout.on('payment.failed', function (response) {
+        setError(
+          response.error?.description ||
+            'Payment failed. Your order was not paid and the cart remains available for retry.'
+        );
+        setPlacing(false);
+      });
+      razorpayCheckout.open();
+    } catch (err) {
+      setError(err.message || 'We could not start the online payment flow. Please try again.');
+      setPlacing(false);
+    }
+  };
+
+  const canPlaceCodOrder = codEnabled && !loadingPayment && !placing;
+  const canPlaceRazorpayOrder = onlinePayments && !loadingPayment && !placing;
 
   return (
     <section className="section checkout-page">
@@ -208,28 +302,42 @@ export default function CheckoutPage() {
           <div className="checkout-panel">
             <p className="eyebrow">Step 2</p>
             <h2>Choose a payment method</h2>
-            <label className={`payment-option ${paymentEnabled ? 'available' : 'unavailable'}`}>
-              <input type="radio" name="payment" checked readOnly />
+            <label className={`payment-option ${codEnabled ? 'available' : 'unavailable'}`}>
+              <input
+                type="radio"
+                name="payment"
+                checked={selectedMethod === 'cod'}
+                onChange={() => setSelectedMethod('cod')}
+                disabled={!codEnabled}
+              />
               <span>
                 <strong>Cash on delivery</strong>
                 <small>
-                  {paymentEnabled
+                  {codEnabled
                     ? 'Pay when your order arrives.'
                     : 'Currently unavailable — the store has not enabled cash on delivery.'}
                 </small>
               </span>
-              <b>{paymentEnabled ? 'Available' : 'Unavailable'}</b>
+              <b>{codEnabled ? 'Available' : 'Unavailable'}</b>
             </label>
-            <div className="payment-option unavailable">
-              <span className="payment-radio" />
+            <label className={`payment-option ${onlinePayments ? 'available' : 'unavailable'}`}>
+              <input
+                type="radio"
+                name="payment"
+                checked={selectedMethod === 'razorpay'}
+                onChange={() => setSelectedMethod('razorpay')}
+                disabled={!onlinePayments}
+              />
               <span>
                 <strong>Online payment</strong>
                 <small>
-                  Card, UPI and wallet payments will appear after a payment provider is connected.
+                  {onlinePayments
+                    ? 'Pay safely with Razorpay.'
+                    : 'Online payment is not available yet.'}
                 </small>
               </span>
-              <b>Coming soon</b>
-            </div>
+              <b>{onlinePayments ? 'Available' : 'Unavailable'}</b>
+            </label>
             <div className="checkout-actions">
               <button
                 className="secondary-button"
@@ -242,10 +350,19 @@ export default function CheckoutPage() {
               </button>
               <button
                 className="button"
-                disabled={!paymentEnabled || loadingPayment || placing}
-                onClick={placeOrder}
+                disabled={
+                  (selectedMethod === 'cod' && !canPlaceCodOrder) ||
+                  (selectedMethod === 'razorpay' && !canPlaceRazorpayOrder)
+                }
+                onClick={selectedMethod === 'razorpay' ? placeOrderWithRazorpay : placeOrder}
               >
-                {placing ? 'Placing order…' : loadingPayment ? 'Checking payment…' : 'Place order'}
+                {placing
+                  ? 'Processing…'
+                  : loadingPayment
+                    ? 'Checking payment…'
+                    : selectedMethod === 'razorpay'
+                      ? 'Pay with Razorpay'
+                      : 'Place order'}
               </button>
             </div>
           </div>
@@ -268,7 +385,7 @@ export default function CheckoutPage() {
             <span>Estimated delivery</span>
             <strong>{formatLongDate(order.estimatedDeliveryAt) || 'To be confirmed'}</strong>
             <span>Payment</span>
-            <strong>Cash on delivery</strong>
+            <strong>{order.paymentMethod === 'razorpay' ? 'Razorpay payment' : 'Cash on delivery'}</strong>
             <span>Total</span>
             <strong>₹{Number(order.total).toFixed(2)}</strong>
           </div>
