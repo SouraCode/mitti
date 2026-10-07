@@ -36,6 +36,8 @@ async function buildOrderItems(items) {
 
   for (const item of items) {
     const quantity = Number(item.quantity);
+    if (quantity > 4)
+      throw new ApiError(400, 'You can purchase a maximum of 4 units of the same product.');
     if (!item.productId || !Number.isInteger(quantity) || quantity < 1)
       throw new ApiError(400, 'Invalid cart item.');
 

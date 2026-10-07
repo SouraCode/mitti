@@ -182,13 +182,16 @@ export default function CheckoutPage() {
 
   const canPlaceCodOrder = codEnabled && !loadingPayment && !placing;
   const canPlaceRazorpayOrder = onlinePayments && !loadingPayment && !placing;
+  const checkoutTitle = step === 0 ? 'Delivery details' : step === 1 ? 'Payment' : 'Order confirmed';
 
   return (
     <section className="section checkout-page">
-      <div className="page-intro">
-        <p className="eyebrow">Your order</p>
-        <h1>{order ? 'Thank you.' : 'A few details, then it’s yours.'}</h1>
-        <p>Complete each step to place your order securely.</p>
+      <div className="checkout-intro">
+        <div>
+          <p className="eyebrow">Secure checkout</p>
+          <h1>{checkoutTitle}</h1>
+        </div>
+        {!order && <Link className="text-link" to="/cart">Edit bag →</Link>}
       </div>
       <ol className="checkout-steps" aria-label="Checkout progress">
         {steps.map((label, index) => (
@@ -406,7 +409,7 @@ export default function CheckoutPage() {
 function OrderSummary({ items, subtotal, itemCount, address }) {
   return (
     <aside className="checkout-panel order-summary">
-      <p className="eyebrow">Order summary</p>
+      <div className="order-summary-topline"><p className="eyebrow">Order summary</p><span>Secure checkout</span></div>
       <h2>
         {itemCount} {itemCount === 1 ? 'item' : 'items'}
       </h2>

@@ -19,14 +19,12 @@ export default function ShopPage() {
   };
   return (
     <section className="shop-page section">
-      <div className="page-intro">
-        <p className="eyebrow">The collection</p>
-        <h1>{search ? `Results for “${search}”` : 'Care, in its own time.'}</h1>
-        <p>
-          {search
-            ? 'Browse products matching your search.'
-            : 'Our catalogue will be shaped by fresh, small-batch releases.'}
-        </p>
+      <div className="shop-heading">
+        <div>
+          <p className="eyebrow">The collection</p>
+          <h1>{search ? `Results for “${search}”` : 'Shop all rituals'}</h1>
+        </div>
+        {!loading && <span>{products.length} {products.length === 1 ? 'product' : 'products'}</span>}
       </div>
       <div className="shop-tools">
         <div className="filter-tabs">

@@ -34,7 +34,7 @@ function GalleryPhoto({ image, name, index }) {
 
 export default function ProductPage() {
   const { slug } = useParams();
-  const { add } = useCart();
+  const { add, notice } = useCart();
   const { has, toggle } = useWishlist();
   const [state, setState] = useState({ loading: true, product: null });
   const [added, setAdded] = useState(false);
@@ -82,15 +82,19 @@ export default function ProductPage() {
     )
     .slice(0, 4);
   const addProduct = () => {
-    add({
+    const wasAdded = add({
       id: product.id,
       name: product.name,
       slug: product.slug,
       image: images.find((image) => image.isPrimary)?.url || images[0]?.url || '',
       price: product.price,
+      stockQuantity: product.stock.quantity,
+      stockLabel: product.stock.label,
     });
-    setAdded(true);
-    window.setTimeout(() => setAdded(false), 1600);
+    if (wasAdded) {
+      setAdded(true);
+      window.setTimeout(() => setAdded(false), 1600);
+    }
   };
 
   return (
@@ -138,6 +142,9 @@ export default function ProductPage() {
                 ? 'Added to bag ✓'
                 : 'Add to bag'}
           </button>
+          {notice?.productId === product.id && (
+            <p className="cart-limit-message detail-limit-message" role="status">{notice.message}</p>
+          )}
           <button
             type="button"
             className={`detail-wishlist-button${has(product) ? ' is-saved' : ''}`}

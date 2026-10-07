@@ -11,11 +11,27 @@ function offerLabel(product) {
 }
 export default function ProductCard({ product }) {
   const [imageFailed, setImageFailed] = useState(false);
-  const { add } = useCart();
+  const { add, update, items, notice } = useCart();
   const { has, toggle } = useWishlist();
   const onOffer = Boolean(product.offer);
   const image = product.images?.[0];
   const price = Number(product.price);
+  const stockQuantity = product.stock?.quantity;
+  const outOfStock = product.stock?.state === 'out_of_stock';
+  const lowStock = product.stock?.state === 'low_stock';
+  const productId = product.id || product._id;
+  const cartItem = items.find((item) => item.id === productId);
+  const addToBag = () => {
+    add({
+      id: productId,
+      name: product.name,
+      slug: product.slug,
+      image: image?.url || '',
+      price: price || 0,
+      stockQuantity,
+      stockLabel: product.stock?.label,
+    });
+  };
   return (
     <article className="product-card">
       <Link to={`/products/${product.slug}`}>
@@ -47,6 +63,9 @@ export default function ProductCard({ product }) {
           <p className="product-category">{product.category}</p>
           <h3>{product.name}</h3>
         </Link>
+        {(lowStock || outOfStock) && (
+          <p className={`product-stock-note ${product.stock.state}`}>{product.stock.label}</p>
+        )}
         <div className="product-card-bottom">
           <p className="product-prices">
             {Number.isFinite(price) ? (
@@ -56,15 +75,27 @@ export default function ProductCard({ product }) {
               </>
             ) : 'Details coming soon'}
           </p>
-          <button
-            type="button"
-            className="product-quick-add"
-            aria-label={`Add ${product.name} to your bag`}
-            onClick={() => add({ id: product.id || product._id, name: product.name, slug: product.slug, image: image?.url || '', price: price || 0 })}
-          >
-            +
-          </button>
+          {cartItem ? (
+            <div className="card-quantity-control" aria-label={`Quantity for ${product.name}`}>
+              <button type="button" onClick={() => update(productId, cartItem.quantity - 1)} aria-label={`Remove one ${product.name}`}>−</button>
+              <span aria-live="polite">{cartItem.quantity}</span>
+              <button type="button" onClick={addToBag} aria-label={`Add one ${product.name}`}>+</button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              className="product-quick-add"
+              aria-label={`Add ${product.name} to your bag`}
+              onClick={addToBag}
+              disabled={outOfStock}
+            >
+              {outOfStock ? '×' : '+'}
+            </button>
+          )}
         </div>
+        {notice?.productId === productId && (
+          <p className="cart-limit-message" role="status">{notice.message}</p>
+        )}
       </div>
     </article>
   );

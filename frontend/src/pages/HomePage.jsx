@@ -41,40 +41,62 @@ function formatProduct(product, index) {
     reviews: product.rating?.count ? `${product.rating.count} reviews` : 'No reviews yet',
     badge: offerPercent > 0 ? `${offerPercent}% off` : index === 0 ? 'Best seller' : '',
     image: product.images?.[0]?.url || '',
+    stock: product.stock,
+    stockQuantity: product.stock?.quantity,
+    stockLabel: product.stock?.label,
     source: product,
   };
 }
 
 export default function HomePage() {
   const { products, loading } = useProducts({ limit: '3' });
-  const { add } = useCart();
+  const { add, update, items, notice } = useCart();
   const { has, toggle } = useWishlist();
   const categories = useCategories();
   const featured = products.slice(0, 3).map(formatProduct);
+  const addFeaturedProduct = (product) => {
+    add(product);
+  };
 
   return (
     <div className="ritual-home">
       <section className="ritual-hero">
-        <div className="ritual-hero-copy"><p className="ritual-overline">Botanical essentials</p><h1>Your skin,<br />but better.</h1><p>Clean formulas.<br />Visible results.</p><Link to="/shop" className="ritual-hero-button">Discover your routine <Icon name="arrow" size={17} /></Link></div>
-        <div className="ritual-hero-image" role="img" aria-label="Woman enjoying a fresh skincare ritual" />
-        <div className="ritual-product-bottle" aria-hidden="true"><span>MITTI</span><small>Glow<br />Face Serum</small><i>Vitamin C · 30 ml</i></div>
+        <div className="ritual-hero-copy">
+          <p className="ritual-overline">Botanical care · Made thoughtfully</p>
+          <h1>Skin rituals,<br /><em>rooted in nature.</em></h1>
+          <p>Small-batch essentials that make everyday care feel calm, effective, and beautifully simple.</p>
+          <div className="ritual-hero-actions">
+            <Link to="/shop" className="ritual-hero-button">Explore the collection <Icon name="arrow" size={17} /></Link>
+            <Link to="/our-story" className="ritual-hero-story">Our philosophy</Link>
+          </div>
+          <div className="ritual-hero-trust"><span>Plant-powered</span><span>Mindfully made</span><span>Everyday gentle</span></div>
+        </div>
+        <div className="ritual-hero-image" role="img" aria-label="Woman enjoying a fresh botanical skincare ritual">
+          <div className="ritual-hero-note"><small>Our promise</small><strong>Less noise.<br />More ritual.</strong></div>
+        </div>
       </section>
 
-      {categories.length > 0 && <section className="ritual-benefits ritual-categories" aria-label="Shop by category">
-        {categories.map((category, index) => {
-          const icon = categoryDetails[index % categoryDetails.length];
-          return <Link to={`/shop?category=${encodeURIComponent(category.name)}`} key={category._id} className="ritual-benefit"><span className={category.image?.url ? 'has-category-image' : ''}>{category.image?.url ? <img src={category.image.url} alt="" /> : <Icon name={icon} size={26} />}</span><strong>{category.name}</strong></Link>;
-        })}
+      {categories.length > 0 && <section className="ritual-category-section" aria-label="Shop by category">
+        <div className="ritual-category-heading"><p className="ritual-overline">Find your ritual</p><h2>Shop by concern</h2></div>
+        <div className="ritual-benefits ritual-categories">
+          {categories.map((category, index) => {
+            const icon = categoryDetails[index % categoryDetails.length];
+            return <Link to={`/shop?category=${encodeURIComponent(category.name)}`} key={category._id} className="ritual-benefit"><span className={category.image?.url ? 'has-category-image' : ''}>{category.image?.url ? <img src={category.image.url} alt="" /> : <Icon name={icon} size={26} />}</span><strong>{category.name}</strong><small>Explore →</small></Link>;
+          })}
+        </div>
       </section>}
 
       <section className="ritual-products" aria-labelledby="bestsellers-title">
         <div className="ritual-section-heading"><div><p className="ritual-overline">Made for your every day</p><h2 id="bestsellers-title">Bestsellers</h2></div><Link to="/shop">View all <Icon name="arrow" size={18} /></Link></div>
         <div className="ritual-product-grid">
-          {featured.map((product) => <article className="ritual-product-card" key={product.id}>
-            <Link to={product.slug ? `/products/${product.slug}` : '/shop'} className={`ritual-product-image${product.image ? '' : ' is-empty'}`}>{product.badge && <span>{product.badge}</span>}{product.image ? <img src={product.image} alt={product.name} /> : <em>Product photo<br />coming soon</em>}</Link>
-            <button className={`ritual-wishlist-button${has(product.source) ? ' is-saved' : ''}`} onClick={() => toggle(product.source)} aria-label={`${has(product.source) ? 'Remove' : 'Add'} ${product.name} ${has(product.source) ? 'from' : 'to'} wishlist`} aria-pressed={has(product.source)}>{has(product.source) ? '♥' : '♡'}</button>
-            <div className="ritual-product-info"><Link to={product.slug ? `/products/${product.slug}` : '/shop'}><h3>{product.name}</h3></Link><p>{product.category}</p><small>★ {product.rating} <i>({product.reviews})</i></small><div><span className="ritual-price"><strong>₹{product.price}</strong>{product.onOffer && <del>₹{product.regularPrice}</del>}</span><button onClick={() => add(product)} aria-label={`Add ${product.name} to bag`}>+</button></div></div>
-          </article>)}
+          {featured.map((product) => {
+            const cartItem = items.find((item) => item.id === product.id);
+            return <article className="ritual-product-card" key={product.id}>
+              <Link to={product.slug ? `/products/${product.slug}` : '/shop'} className={`ritual-product-image${product.image ? '' : ' is-empty'}`}>{product.badge && <span>{product.badge}</span>}{product.image ? <img src={product.image} alt={product.name} /> : <em>Product photo<br />coming soon</em>}</Link>
+              <button className={`ritual-wishlist-button${has(product.source) ? ' is-saved' : ''}`} onClick={() => toggle(product.source)} aria-label={`${has(product.source) ? 'Remove' : 'Add'} ${product.name} ${has(product.source) ? 'from' : 'to'} wishlist`} aria-pressed={has(product.source)}>{has(product.source) ? '♥' : '♡'}</button>
+              <div className="ritual-product-info"><Link to={product.slug ? `/products/${product.slug}` : '/shop'}><h3>{product.name}</h3></Link><p>{product.category}</p><small>★ {product.rating} <i>({product.reviews})</i></small>{product.stock?.state !== 'in_stock' && <span className={`product-stock-note ${product.stock?.state}`}>{product.stock?.label}</span>}<div><span className="ritual-price"><strong>₹{product.price}</strong>{product.onOffer && <del>₹{product.regularPrice}</del>}</span>{cartItem ? <div className="card-quantity-control" aria-label={`Quantity for ${product.name}`}><button type="button" onClick={() => update(product.id, cartItem.quantity - 1)} aria-label={`Remove one ${product.name}`}>−</button><span aria-live="polite">{cartItem.quantity}</span><button type="button" onClick={() => addFeaturedProduct(product)} aria-label={`Add one ${product.name}`}>+</button></div> : <button className="ritual-add-button" onClick={() => addFeaturedProduct(product)} aria-label={`Add ${product.name} to bag`} disabled={product.stock?.state === 'out_of_stock'}>{product.stock?.state === 'out_of_stock' ? '×' : '+'}</button>}</div>{notice?.productId === product.id && <span className="cart-limit-message" role="status">{notice.message}</span>}</div>
+            </article>;
+          })}
           {!loading && !featured.length && <p className="ritual-no-products">Products will appear here once they are published.</p>}
         </div>
       </section>

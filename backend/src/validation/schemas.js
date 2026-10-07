@@ -63,7 +63,7 @@ export const razorpayCreateOrderSchema = obj(
       .array(
         z.object({
           productId: z.string().length(24),
-          quantity: z.coerce.number().int().min(1),
+          quantity: z.coerce.number().int().min(1).max(4),
         })
       )
       .min(1),

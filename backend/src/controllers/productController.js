@@ -7,10 +7,10 @@ const publicProduct = (product, offers = [], rating = {}) => {
   const price = effectivePrice(product, offers);
   const stock =
     product.stockQuantity === 0
-      ? { state: 'out_of_stock', label: 'Out of stock' }
-      : product.stockQuantity < 10
-        ? { state: 'low_stock', label: `Only ${product.stockQuantity} left.` }
-        : { state: 'in_stock', label: 'In stock' };
+      ? { state: 'out_of_stock', label: 'Out of stock', quantity: 0 }
+      : product.stockQuantity <= product.lowStockThreshold
+        ? { state: 'low_stock', label: `Only ${product.stockQuantity} left`, quantity: product.stockQuantity }
+        : { state: 'in_stock', label: 'In stock', quantity: product.stockQuantity };
   const images = [...product.images]
     .sort((a, b) => Number(b.isPrimary) - Number(a.isPrimary))
     .map(({ url, alt, isPrimary }) => ({ url, alt, isPrimary }));
