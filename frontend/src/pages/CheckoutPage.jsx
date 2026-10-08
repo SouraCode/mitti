@@ -416,7 +416,7 @@ function OrderSummary({ items, subtotal, itemCount, address }) {
       <div className="summary-items">
         {items.map((item) => (
           <div className="summary-item" key={item.id}>
-            {item.image ? <img src={item.image} alt="" /> : <div className="cart-thumb">M</div>}
+            {item.image ? <img src={item.image} alt={`${item.name} product`} loading="lazy" decoding="async" /> : <div className="cart-thumb">M</div>}
             <span>
               {item.name}
               <small>Qty {item.quantity}</small>

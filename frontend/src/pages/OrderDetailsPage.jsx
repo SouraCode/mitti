@@ -16,7 +16,7 @@ function statusIndex(status) {
 }
 
 function ItemImage({ item }) {
-  if (item.image) return <img src={item.image} alt="" />;
+  if (item.image) return <img src={item.image} alt={`${item.name} order item`} loading="lazy" decoding="async" />;
   return <span className="order-item-image-empty" aria-hidden="true">✦</span>;
 }
 

@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import StoreLayout from './components/layout/StoreLayout';
+import Seo from './components/common/Seo';
 import HomePage from './pages/HomePage';
 import ShopPage from './pages/ShopPage';
 import ProductPage from './pages/ProductPage';
@@ -22,6 +23,7 @@ import ScrollManager from './components/common/ScrollManager';
 export default function App() {
   return (
     <>
+      <Seo />
       <ScrollManager />
       <Routes>
         <Route element={<StoreLayout />}>

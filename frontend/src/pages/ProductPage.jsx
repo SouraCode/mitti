@@ -36,25 +36,41 @@ export default function ProductPage() {
   const { slug } = useParams();
   const { add, notice } = useCart();
   const { has, toggle } = useWishlist();
-  const [state, setState] = useState({ loading: true, product: null });
+  const [state, setState] = useState({ loading: true, product: null, reviews: [] });
   const [added, setAdded] = useState(false);
   const { products: allProducts, loading: suggestionsLoading } = useProducts({ limit: '12' });
 
   useEffect(() => {
     let active = true;
-    setState({ loading: true, product: null });
+    setState({ loading: true, product: null, reviews: [] });
     productsApi
       .getBySlug(slug)
-      .then(({ product }) => {
-        if (active) setState({ loading: false, product });
+      .then(({ product, reviews = [] }) => {
+        if (active) setState({ loading: false, product, reviews });
       })
       .catch(() => {
-        if (active) setState({ loading: false, product: null });
+        if (active) setState({ loading: false, product: null, reviews: [] });
       });
     return () => {
       active = false;
     };
   }, [slug]);
+
+  useEffect(() => {
+    if (!state.product) {
+      delete window.__mittiProduct;
+      delete window.__mittiReviews;
+      return;
+    }
+
+    window.__mittiProduct = state.product;
+    window.__mittiReviews = state.reviews;
+
+    return () => {
+      delete window.__mittiProduct;
+      delete window.__mittiReviews;
+    };
+  }, [state.product, state.reviews]);
 
   if (state.loading)
     return (
